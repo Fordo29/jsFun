@@ -27,21 +27,22 @@ const kittyPrompts = {
 
     // Return an array of just the names of kitties who are orange e.g.
     // ['Tiger', 'Snickers']
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = kitties.filter(cat => cat.color === 'orange').map(orangeCat => orangeCat.name);
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // Getting in an array of objects w/name, age, and color properties want to get back an array of only the orange cats' names. reach for a filter to get back orange cat names.
   },
 
   sortByAge() {
     // Sort the kitties by their age
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = kitties.sort((kittyAge1, kittyAge2) =>
+      kittyAge2.age - kittyAge1.age);
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // sort the kitties by their age - oldest to youngest.
   },
 
   growUp() {
@@ -58,11 +59,13 @@ const kittyPrompts = {
     // },
     // ...etc]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = kitties.map(kitty => {kitty.age += 2; return kitty;});
     return result;
   }
 };
 
+// Annotation:
+// update the ages by 2 years.
 
 
 
@@ -90,16 +93,22 @@ const clubPrompts = {
     //   ...etc
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = {};
+    clubs.forEach(club => {
+      club.members.forEach(member => {
+        if(result[member]) {
+          result[member].push(club.club);
+        } else {
+          result[member] = [club.club];
+        }
+      });
+    });
     return result;
 
     // Annotation:
     // Write your annotation here as a comment
   }
 };
-
-
-
 
 
 
@@ -126,7 +135,9 @@ const modPrompts = {
     //   { mod: 4, studentsPerInstructor: 8 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = mods.map(mod => {
+      return {mod: mod.mod, studentsPerInstructor: (mod.students / mod.instructors)};
+    });
     return result;
 
     // Annotation:
@@ -161,7 +172,9 @@ const cakePrompts = {
     //    ..etc
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakes.map(cake => {
+      return {flavor: cake.cakeFlavor, inStock: cake.inStock};
+    });
     return result;
 
     // Annotation:
@@ -189,7 +202,9 @@ const cakePrompts = {
     // ..etc
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakes.filter(cake => {
+      return cake.inStock > 0;
+    });
     return result;
 
     // Annotation:
@@ -200,7 +215,8 @@ const cakePrompts = {
     // Return the total amount of cakes in stock e.g.
     // 59
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakes.reduce((total, availableCakes) =>
+      total + availableCakes.inStock, 0);
     return result;
 
     // Annotation:
@@ -211,8 +227,12 @@ const cakePrompts = {
     // Return an array of all unique toppings (no duplicates) needed to bake
     // every cake in the dataset e.g.
     // ['dutch process cocoa', 'toasted sugar', 'smoked sea salt', 'berries', ..etc]
+    const result = [];
+    cakes.forEach(cake => cake.toppings.forEach(topping => {if(!result.includes(topping)){
+      result.push(topping);
+    }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    }));
     return result;
 
     // Annotation:
@@ -229,8 +249,16 @@ const cakePrompts = {
     //    'berries': 2,
     //    ...etc
     // }
-
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = {};
+    cakes.forEach(cake => {
+      cake.toppings.forEach(topping => {
+        if(result[topping]) {
+          result[topping] += 1;
+        } else {
+          result[topping] = 1;
+        }
+      });
+    });
     return result;
 
     // Annotation:
