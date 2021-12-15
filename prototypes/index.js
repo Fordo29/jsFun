@@ -227,8 +227,9 @@ const cakePrompts = {
     // Return an array of all unique toppings (no duplicates) needed to bake
     // every cake in the dataset e.g.
     // ['dutch process cocoa', 'toasted sugar', 'smoked sea salt', 'berries', ..etc]
+
     const result = [];
-    cakes.forEach(cake => cake.toppings.forEach(topping => {if(!result.includes(topping)){
+    cakes.forEach(cake => cake.toppings.forEach(topping => { if(!result.includes(topping)) {
       result.push(topping);
     }
 
@@ -293,7 +294,7 @@ const classPrompts = {
     //   { roomLetter: 'G', program: 'FE', capacity: 29 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = classrooms.filter(classroom => classroom.program === 'FE');
     return result;
 
     // Annotation:
@@ -307,8 +308,26 @@ const classPrompts = {
     //   feCapacity: 110,
     //   beCapacity: 96
     // }
+    let fe = 0;
+    let be = 0;
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = classrooms.reduce((acc, room) => {
+      // if(room.program === 'FE') {
+      //   fe += room.capacity;
+      // } else {
+      //   be += room.capacity;
+      // }
+      room.program === 'FE' ? fe += room.capacity : be += room.capacity;
+      acc = {feCapacity: fe, beCapacity: be};
+      return acc;
+    } , {});
+    // classrooms.forEach(classroom => {
+    //     if(classroom.program === 'FE') {
+    //       result.feCapacity += classroom.capacity;
+    //     } else {
+    //       result.beCapacity += classroom.capacity;
+    //     }
+    // });
     return result;
 
     // Annotation:
@@ -318,7 +337,8 @@ const classPrompts = {
   sortByCapacity() {
     // Return the array of classrooms sorted by their capacity (least capacity to greatest)
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = classrooms.sort((classroomCapacity1, classroomCapacity2) =>
+      classroomCapacity1.capacity - classroomCapacity2.capacity);
     return result;
 
     // Annotation:
@@ -345,12 +365,23 @@ const bookPrompts = {
     //   'Catch-22', 'Treasure Island']
 
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = books.filter(book => {
+      if(book.genre !== 'Horror' && book.genre !== 'True Crime') {
+        return book;
+      }
+    }).map(book => book.title);
     return result;
+
+    // const result = books.reduce((acc, book) => {
+    //   if(book.genre !== 'Horror' && book.genre !== 'True Crime'){
+    //     acc.push(book.title)
+    //   }
+    //   return acc
+    // }, [])
+    // return result;
 
     // Annotation:
     // Write your annotation here as a comment
-
   },
   getNewBooks() {
     // return an array of objects containing all books that were
@@ -360,11 +391,18 @@ const bookPrompts = {
     //  { title: 'Life of Pi', year: 2001 },
     //  { title: 'The Curious Incident of the Dog in the Night-Time', year: 2003 }]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = books.reduce((acc, book) => {
+      if(book.published >= 1990) {
+        acc.push({title: book.title, year: book.published});
+      }
+      return acc;
+    }, []);
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // input = an array of book objects
+    //output = an array of book objects that only include the book name and the year it was published
+    // pseudocode = I want to filter down my array by year of publication and return an array of those books with only book title and year of publication
   }
 
 };
@@ -383,11 +421,16 @@ const weatherPrompts = {
     // return an array of all the average temperatures. Eg:
     // [ 40, 40, 44.5, 43.5, 57, 35, 65.5, 62, 14, 46.5 ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = weather.reduce((acc, temperature) => {
+      acc.push((temperature.temperature.high + temperature.temperature.low) / 2);
+      return acc;
+    }, []);
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // input = an array of weather objects
+    // output = an array of just numbers that are the average temperatures
+    // I can reduce down to the temperatures and then average the high and low temperatures
   },
 
   findSunnySpots() {
@@ -397,11 +440,17 @@ const weatherPrompts = {
     // 'New Orleans, Louisiana is sunny.',
     // 'Raleigh, North Carolina is mostly sunny.' ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = weather.reduce((acc, placeName) => {
+      if(placeName.type === 'sunny' || placeName.type === 'mostly sunny')
+        acc.push(`${placeName.location} is ${placeName.type}.`);
+      return acc;
+    }, []);
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // input = an array of weather objects
+    // output = an array of strings with interpolated city, and state in the string.
+
   },
 
   findHighestHumidity() {
@@ -413,11 +462,15 @@ const weatherPrompts = {
     //   temperature: { high: 49, low: 38 }
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
-    return result;
+    const result = weather.sort((weather1, weather2) => {
+      return weather2.humidity - weather1.humidity;
+    });
+    return result[0];
 
     // Annotation:
-    // Write your annotation here as a comment
+    // input = an array of weather objects.
+    // output = return one object with the highest humidity.
+    // I think that I can sort an array of object from highest to lowest humidity and just return the object with the highest humidity.
 
   }
 };
@@ -440,11 +493,22 @@ const nationalParksPrompts = {
     //   parksVisited: ["Rocky Mountain", "Acadia", "Zion"]
     //}
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const parksToVisit = [];
+    const parksVisited = [];
+    const result = nationalParks.reduce((acc, park) => {
+      if(park.visited){
+        parksVisited.push(park.name);
+      } else {
+        parksToVisit.push(park.name);
+      }
+      return acc = {parksToVisit: parksToVisit, parksVisited: parksVisited};
+    }, {});
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // input = is an array of National Park objects
+    //output = is an object that has 2 arrays in them - one is parks to visit and one is parks already visited.
+    // I am thinking I will either forEach or reduce the array of objects into key values based on a boolean value. If visited is equal to false, I will push in the name of the park in to an array of parksToVisit.
   },
 
   getParkInEachState() {
@@ -457,36 +521,47 @@ const nationalParksPrompts = {
     // { Florida: 'Everglades' } ]
 
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = nationalParks.map(park => {
+      return {[park.location]: park.name};
+    });
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // input = is an array of National Park objects
+    //output = is an array where the key is state and the value is park name.
+    // I am going to try to map and mutate the array of objects into a new array with a new key value pair.
   },
 
+  // Return an array of all the activities I can do
+  // in a National Park. Make sure to exclude duplicates. eg:
+  // [ 'hiking',
+  //   'shoeshoing',
+  //   'camping',
+  //   'fishing',
+  //   'boating',
+  //   'watching wildlife',
+  //   'cross-country skiing',
+  //   'swimming',
+  //   'bird watching',
+  //   'canyoneering',
+  //   'backpacking',
+  //   'rock climbing' ]
   getParkActivities() {
-    // Return an array of all the activities I can do
-    // in a National Park. Make sure to exclude duplicates. eg:
-    // [ 'hiking',
-    //   'shoeshoing',
-    //   'camping',
-    //   'fishing',
-    //   'boating',
-    //   'watching wildlife',
-    //   'cross-country skiing',
-    //   'swimming',
-    //   'bird watching',
-    //   'canyoneering',
-    //   'backpacking',
-    //   'rock climbing' ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = nationalParks.reduce((acc, park) => { park.activities.forEach(activity => {
+      if (!acc.includes(activity)) {
+        acc.push(activity);
+      }
+    });
+    return acc;
+    }, []);
     return result;
-
-    // Annotation:
-    // Write your annotation here as a comment
   }
 };
+// Annotation:
+// input = is an array of National Park objects
+// output = is an array of activities with no repeats
+// I am going to try a reduce and then push the activity into an array when it isn't already in the array of activities.
 
 
 
@@ -507,11 +582,15 @@ const breweryPrompts = {
     // Return the total beer count of all beers for every brewery e.g.
     // 40
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = breweries.reduce((totalBeerCount, brewery) => {
+      totalBeerCount += brewery.beers.length;
+      return totalBeerCount;
+    }, 0);
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // input = an array of objects that are breweries
+    // output = I need a beer count for all the beers in inventory for each Brewery
   },
 
   getBreweryBeerCount() {
@@ -523,11 +602,14 @@ const breweryPrompts = {
     // ...etc.
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = breweries.map(brewery => {
+      return {name: brewery.name, beerCount: brewery.beers.length}; });
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // Input = an array of objects that are breweries
+    //Output = an array of objects that return the name of each brewery and how many different beers they have
+
   },
 
   findHighestAbvBeer() {
@@ -535,11 +617,28 @@ const breweryPrompts = {
     // e.g.
     // { name: 'Barrel Aged Nature\'s Sweater', type: 'Barley Wine', abv: 10.9, ibu: 40 }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    // const result = breweries.map(brewery => {
+    //
+    //       brewery.beers.sort((beerA, beerB) => beerB.abv - beerA.abv)
+    //       console.log(brewery.beers[0]);
+    //     })
+
+    const myBeer = [];
+    const result = breweries.reduce((acc, brewery) =>
+    {brewery.beers.forEach(beer => {
+      myBeer.push(beer);});
+
+    myBeer.sort((beerA, beerB) => beerB.abv - beerA.abv);
+
+    return acc = myBeer[0];
+    }, {});
+
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // Input = an array of objects that are breweries
+    //Output = return a single beer object with highest abv
+    // iterate through each brewery and into their beer collection sort their beers highest to lowest find the highest.
   }
 };
 
