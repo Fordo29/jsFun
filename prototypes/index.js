@@ -682,11 +682,19 @@ const turingPrompts = {
     //  { name: 'Robbie', studentCount: 18 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = instructors.reduce((acc, instructor) => {
+      // console.log(cohorts[instructor.module - 1]);
+      acc.push({name: instructor.name, studentCount: cohorts[instructor.module - 1].studentCount});
+      return acc;
+    }, []);
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // Input: 2 arrays - 1 with instructor information and 1 with cohort information
+    // Output: 1 array with an object of the instructors name and a student count of the cohort
+    // I will need to start a new object with the key value pair of just the instructors name. 
+    // Then I will need to add an the key value pair of the student count that matches 
+    //for the module they teach. 
   },
 
   studentsPerInstructor() {
@@ -695,12 +703,25 @@ const turingPrompts = {
     // cohort1806: 9,
     // cohort1804: 10.5
     // }
+    const numOfInstructors = instructors.reduce((acc, instructor) => {
+      acc[instructor.module]++;
+      return acc;
+    }, {[1]: 0, [2]: 0, [3]: 0, [4]: 0});
+    console.log(numOfInstructors);
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cohorts.reduce((acc, cohort) => {
+      acc[`cohort${cohort.cohort}`] = cohort.studentCount / numOfInstructors[cohort.module];
+      console.log(acc);
+      return acc;
+    }, {});
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // Input: 2 arrays - 1 with instructor information and 1 with cohort information
+    // Output: 1 object with an key value pairs for each cohort and the number of students per instructor.. 
+    // Ugh.. I will start out the cohort array and get the key set up and use the student count
+    // and divide by the sum of instructors in [].   I need to do a separate function to find out the number
+    // of instructors per module. 
   },
 
   modulesPerTeacher() {
